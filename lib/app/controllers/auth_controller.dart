@@ -5,10 +5,8 @@ import 'package:myapp/app/routes/app_pages.dart';
 class AuthController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  // Stream untuk mengecek status autentikasi pengguna (login/logout)
   Stream<User?> get streamAuthStatus => auth.authStateChanges();
 
-  // Method untuk signup menggunakan email dan password
   void signup(String emailAddress, String password) async {
     try {
       UserCredential myUser = await auth.createUserWithEmailAndPassword(
@@ -36,8 +34,7 @@ class AuthController extends GetxController {
     }
   }
 
-  // Method untuk login
-  Future<void> login(String email, String pass) async {
+  void login(String email, String pass) async {
     try {
       final credential = await auth.signInWithEmailAndPassword(
         email: email,
@@ -48,11 +45,9 @@ class AuthController extends GetxController {
       } else {
         Get.defaultDialog(
           title: "Peringatan !!",
-          middleText: "Harap melakukan verifikasi email terlebih dahulu.",
+          middleText: "Harap Melakukan Verifikasi email terlebih dahulu",
         );
       }
-      ;
-      // Jika login berhasil, navigasi ke halaman HOME
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -66,23 +61,15 @@ class AuthController extends GetxController {
           title: "Proses Gagal",
           middleText: "Wrong password provided for that user.",
         );
-      } else {
-        print('Error: ${e.message}');
-        Get.defaultDialog(
-          title: "Proses Gagal",
-          middleText: e.message.toString(),
-        );
       }
     }
   }
 
-  // Method untuk logout
-  Future<void> logout() async {
-    await auth.signOut();
+  void logout() {
+    auth.signOut();
     Get.offAllNamed(Routes.LOGIN);
   }
 
-  // Method untuk mereset password
   void resetPassword(String email) async {
     if (email != "" && GetUtils.isEmail(email)) {
       try {
@@ -104,6 +91,6 @@ class AuthController extends GetxController {
     } else {
       Get.defaultDialog(
           title: "Terjadi kesalahan", middleText: "Email tidak valid");
-}
-}
+    }
+  }
 }

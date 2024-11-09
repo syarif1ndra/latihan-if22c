@@ -1,44 +1,67 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
+import 'package:myapp/app/modules/mahasiswa/views/mahasiswa_update_view.dart';
 
 import '../controllers/mahasiswa_controller.dart';
 
 class MahasiswaView extends GetView<MahasiswaController> {
-  const MahasiswaView({super.key});
+  void ShowOption(id) async {
+    var result = await Get.dialog(
+        SimpleDialog(
+          children: [
+            ListTile(
+              onTap: () {
+                Get.back();
+                Get.to(() => MahasiswaUpdateView(), arguments: id);
+              },
+              title: Text("Update"),
+            ),
+            ListTile(
+              onTap: () {},
+              title: Text("Delete"),
+            ),
+            ListTile(
+              onTap: () {},
+              title: Text("Close"),
+            ),
+          ],
+        ),
+        barrierDismissible: false);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:3640279626.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:674613771.
-      stream: Get.put(MahasiswaController()).StreamData(),
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:1163962038.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2987803429.
+    return StreamBuilder<QuerySnapshot<Object?>>(
+      stream: Get.put(MahasiswaController()).streamData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
+          // ambil data dari firebase
           var listAllDocs = snapshot.data?.docs ?? [];
           return listAllDocs.length > 0
               ? ListView.builder(
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:3133421910.
                   itemCount: listAllDocs.length,
                   itemBuilder: (context, index) => ListTile(
-                        leading: CircleAvatar(
-                          child: Text('${index + 1}'),
-                          backgroundColor:
-                              const Color.fromARGB(255, 245, 21, 223),
-                        ),
-                        title: Text(
-                            "${(listAllDocs[index].data() as Map<String, dynamic>)["nama"]}"),
-                        subtitle: Text(
-                            "${(listAllDocs[index].data() as Map<String, dynamic>)["npm"]}"),
-                        trailing: IconButton(
-                          onPressed:(){},
-                         icon: Icon(Icons.ad_units),
-                         color: const Color.fromARGB(255, 255, 0, 183),
-                         )
-                      ))
+                    leading: CircleAvatar(
+                      child: Text('${index + 1}'),
+                      backgroundColor: Colors.white,
+                    ),
+                    title: Text(
+                        "${(listAllDocs[index].data() as Map<String, dynamic>)["nama"]}"),
+                    subtitle: Text(
+                        "${(listAllDocs[index].data() as Map<String, dynamic>)["npm"]}"),
+                    trailing: IconButton(
+                      onPressed: () {
+                        ShowOption(listAllDocs[index].id);
+                      },
+                      icon: Icon(Icons.more_vert),
+                    ),
+                  ),
+                )
               : Center(
-                  child: Text('Data Kosong'),
+                  child: Text("Data Kosong"),
                 );
         }
         return Center(
