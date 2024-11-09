@@ -24,12 +24,16 @@ class MahasiswaView extends GetView<MahasiswaController> {
               title: Text("Delete"),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Get.back();
+              },
               title: Text("Close"),
             ),
           ],
         ),
-        barrierDismissible: false);
+        barrierDismissible: false,
+
+    );
   }
 
   @override
