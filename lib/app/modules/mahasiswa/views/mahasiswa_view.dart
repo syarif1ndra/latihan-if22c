@@ -20,9 +20,13 @@ class MahasiswaView extends GetView<MahasiswaController> {
               title: Text("Update"),
             ),
             ListTile(
-              onTap: () {},
-              title: Text("Delete"),
-            ),
+            onTap: () {
+              Get.back();
+              controller.delete(id);
+            },
+            title: Text('Delete'),
+          ),
+
             ListTile(
               onTap: () {
                 Get.back();
